@@ -17,10 +17,8 @@ export const downloadMedicinesAsExcel = async (medicines: Medicine[], quantities
   let csvContent = headers.join(",") + "\n";
   
   medicines.forEach(medicine => {
-    // Calculate discount percentage
-    const discountPercent = medicine.availability.includes('Discount') 
-      ? parseFloat(medicine.availability.replace('Discount ', '')) 
-      : 0;
+    // Get discount percentage from the Disc field
+    const discountPercent = medicine.Disc || 0;
     
     // Get quantity
     const quantity = quantities?.[medicine.name] || 1;
@@ -33,7 +31,7 @@ export const downloadMedicinesAsExcel = async (medicines: Medicine[], quantities
     
     const row = [
       `"${medicine.name.replace(/"/g, '""')}"`,
-      `"${medicine.manufacturer.replace(/"/g, '""')}"`,
+      `"${medicine.Packing || 'N/A'}"`,
       medicine.price.toFixed(2),
       discountPercent.toString() + '%',
       medicine.tax.toString() + '%',

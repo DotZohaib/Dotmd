@@ -139,11 +139,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Create a properly formatted medicine object
         const medicine = {
           name: excelRow["Description of Goods"],
-          manufacturer: excelRow["Packing"] || 'Not specified',
+          manufacturer: 'Not specified', // We shouldn't use packing for manufacturer
           dosage: 'Not specified',
           price: excelRow["Rate"],
           tax: excelRow["Tax"] || 0,
-          availability: excelRow["Disc"] ? `Discount ${excelRow["Disc"]}%` : 'Regular price'
+          availability: 'Available',
+          Packing: excelRow["Packing"] || 'N/A', // Use the actual Packing field
+          Disc: excelRow["Disc"] || 0,          // Use the actual Disc field
+          Rate: excelRow["Rate"]               // Original price
         };
         
         await storage.createMedicine(medicine);
