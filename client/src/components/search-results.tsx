@@ -77,7 +77,9 @@ export default function SearchResults({ results }: SearchResultsProps) {
       quantity: quantity,
       price: priceAfterDiscount,
       tax: taxAmount,
-      total: calculateFinalPrice(medicine, quantity)
+      total: calculateFinalPrice(medicine, quantity),
+      packing: medicine.Packing || 'N/A',
+      discount: discountPercent
     });
   };
 

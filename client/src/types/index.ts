@@ -20,6 +20,8 @@ export interface BillItem {
   price: number;
   tax: number;
   total: number;
+  packing?: string;   // Medicine packing information
+  discount?: number;  // Discount percentage
 }
 
 // Bill type for frontend use

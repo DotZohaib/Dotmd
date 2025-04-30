@@ -176,7 +176,7 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
                 billItems.map((item, index) => (
                   <TableRow key={index} className="table-row-hover">
                     <TableCell className="font-medium">{item.medicineName}</TableCell>
-                    <TableCell>{'N/A'}</TableCell>
+                    <TableCell>{item.packing || 'N/A'}</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         <Button
@@ -224,7 +224,13 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
                     </TableCell>
                     <TableCell>{(item.price * item.quantity).toFixed(2)}</TableCell>
                     <TableCell>
-                      <span className="pill bg-gray-100 text-gray-800">0%</span>
+                      {item.discount && item.discount > 0 ? (
+                        <span className="pill pill-success badge-pulse">
+                          {item.discount}%
+                        </span>
+                      ) : (
+                        <span className="pill bg-gray-100 text-gray-800">0%</span>
+                      )}
                     </TableCell>
                     <TableCell>{(item.tax * item.quantity).toFixed(2)}</TableCell>
                     <TableCell className="font-medium text-primary">{((item.price + item.tax) * item.quantity).toFixed(2)}</TableCell>

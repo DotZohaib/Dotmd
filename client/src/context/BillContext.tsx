@@ -48,6 +48,14 @@ export function BillProvider({ children }: { children: ReactNode }) {
           (updated[existingIndex].price + updated[existingIndex].tax) * 
           updated[existingIndex].quantity;
         
+        // Make sure to preserve the packing and discount information
+        if (item.packing && !updated[existingIndex].packing) {
+          updated[existingIndex].packing = item.packing;
+        }
+        if (item.discount !== undefined && updated[existingIndex].discount === undefined) {
+          updated[existingIndex].discount = item.discount;
+        }
+        
         setShowBill(true);
         return updated;
       } else {
@@ -68,6 +76,7 @@ export function BillProvider({ children }: { children: ReactNode }) {
     setBillItems(prev => {
       const updated = [...prev];
       updated[index].quantity = quantity;
+      // Preserve all item properties while updating total
       updated[index].total = 
         (updated[index].price + updated[index].tax) * quantity;
       return updated;
