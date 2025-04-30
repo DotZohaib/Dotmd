@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -27,14 +28,56 @@ interface SearchResultsProps {
 export default function SearchResults({ results }: SearchResultsProps) {
   const { addToBill } = useBill();
   const [isPrinting, setIsPrinting] = useState(false);
-
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  
+  // Set default quantity of 1 for any new medicines
+  useEffect(() => {
+    const newQuantities = { ...quantities };
+    results.forEach(medicine => {
+      if (newQuantities[medicine.name] === undefined) {
+        newQuantities[medicine.name] = 1;
+      }
+    });
+    setQuantities(newQuantities);
+  }, [results]);
+  
+  const updateQuantity = (medicineName: string, newQuantity: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [medicineName]: Math.max(1, newQuantity)
+    }));
+  };
+  
+  const getDiscountPercent = (medicine: Medicine) => {
+    if (medicine.availability.includes('Discount')) {
+      return parseFloat(medicine.availability.replace('Discount ', ''));
+    }
+    return 0;
+  };
+  
+  const calculateFinalPrice = (medicine: Medicine, quantity: number) => {
+    const discountPercent = getDiscountPercent(medicine);
+    const discountFactor = (100 - discountPercent) / 100;
+    const priceAfterDiscount = medicine.price * discountFactor;
+    const taxAmount = medicine.tax > 1 ? medicine.tax : (medicine.price * (medicine.tax / 100));
+    const totalWithTax = priceAfterDiscount + taxAmount;
+    
+    return totalWithTax * quantity;
+  };
+  
   const handleAddToBill = (medicine: Medicine) => {
+    const quantity = quantities[medicine.name] || 1;
+    const discountPercent = getDiscountPercent(medicine);
+    const discountFactor = (100 - discountPercent) / 100;
+    const priceAfterDiscount = medicine.price * discountFactor;
+    const taxAmount = medicine.tax > 1 ? medicine.tax : (medicine.price * (medicine.tax / 100));
+    
     addToBill({
       medicineName: medicine.name,
-      quantity: 1,
-      price: medicine.price,
-      tax: medicine.price * (medicine.tax / 100),
-      total: medicine.price + (medicine.price * (medicine.tax / 100))
+      quantity: quantity,
+      price: priceAfterDiscount,
+      tax: taxAmount,
+      total: calculateFinalPrice(medicine, quantity)
     });
   };
 
@@ -47,7 +90,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
   };
 
   const handleDownloadExcel = () => {
-    downloadMedicinesAsExcel(results);
+    downloadMedicinesAsExcel(results, quantities);
   };
 
   return (
@@ -117,6 +160,8 @@ export default function SearchResults({ results }: SearchResultsProps) {
                 <TableHead>Price (₹)</TableHead>
                 <TableHead>Disc (%)</TableHead>
                 <TableHead>Tax (%)</TableHead>
+                <TableHead>Quantity</TableHead>
+                <TableHead>Final Price (₹)</TableHead>
                 <TableHead className="print:hidden">Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -138,6 +183,60 @@ export default function SearchResults({ results }: SearchResultsProps) {
                       }
                     </TableCell>
                     <TableCell>{medicine.tax}%</TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0"
+                          onClick={() => updateQuantity(medicine.name, (quantities[medicine.name] || 1) - 1)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M5 12h14" />
+                          </svg>
+                        </Button>
+                        <Input 
+                          type="number" 
+                          value={quantities[medicine.name] || 1} 
+                          onChange={(e) => updateQuantity(medicine.name, parseInt(e.target.value) || 1)}
+                          className="w-12 h-8 text-center p-0"
+                          min="1"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0"
+                          onClick={() => updateQuantity(medicine.name, (quantities[medicine.name] || 1) + 1)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M12 5v14M5 12h14" />
+                          </svg>
+                        </Button>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium text-primary">
+                      ₹{calculateFinalPrice(medicine, quantities[medicine.name] || 1).toFixed(2)}
+                    </TableCell>
                     <TableCell className="print:hidden">
                       <Button
                         variant="link"
@@ -152,7 +251,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-4">
+                  <TableCell colSpan={8} className="text-center py-4">
                     No medicines found. Try a different search term.
                   </TableCell>
                 </TableRow>
