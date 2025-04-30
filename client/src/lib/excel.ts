@@ -47,9 +47,7 @@ export const downloadMedicinesAsExcel = async (medicines: Medicine[], quantities
     let totalValue = 0;
     
     medicines.forEach(medicine => {
-      const discountPercent = medicine.availability.includes('Discount') 
-        ? parseFloat(medicine.availability.replace('Discount ', '')) 
-        : 0;
+      const discountPercent = medicine.Disc || 0;
       
       const quantity = quantities?.[medicine.name] || 1;
       const discountFactor = (100 - discountPercent) / 100;
@@ -100,13 +98,12 @@ export const downloadBillAsExcel = (bill: Bill) => {
   
   // Add bill items
   bill.items.forEach(item => {
-    // For the discount, we'd need the original medicine record to get the discount percentage
-    // For now we'll estimate it from the price difference, or leave as 0%
-    let discPercent = "0%";
+    // Use the discount percentage if available, otherwise 0%
+    let discPercent = item.discount !== undefined ? `${item.discount}%` : "0%";
     
     const row = [
       `"${item.medicineName.replace(/"/g, '""')}"`,
-      `"N/A"`, // Packing information
+      `"${item.packing || 'N/A'}"`, // Use packing information if available
       item.quantity.toString(),
       item.price.toFixed(2),
       discPercent,
