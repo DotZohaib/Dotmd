@@ -37,7 +37,10 @@ const useMedicinesData = () => {
 };
 
 // Function to search medicines from API
-export const searchMedicines = async (query: string, suggestionsOnly: boolean = false): Promise<Medicine[]> => {
+export const searchMedicines = async (
+  query: string, 
+  suggestionsOnly: boolean = false
+): Promise<Medicine[]> => {
   try {
     const endpoint = suggestionsOnly 
       ? `/api/medicines/suggestions?query=${encodeURIComponent(query)}` 

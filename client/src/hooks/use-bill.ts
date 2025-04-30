@@ -26,7 +26,7 @@ export function useBill() {
       );
 
       if (existingIndex >= 0) {
-        // Update existing item
+        // Update existing item - increment quantity
         const updated = [...prev];
         updated[existingIndex].quantity += 1;
         updated[existingIndex].total = 
@@ -36,9 +36,15 @@ export function useBill() {
         setShowBill(true);
         return updated;
       } else {
-        // Add new item
+        // Add new item - don't replace the previous items, just add to them
         setShowBill(true);
-        return [...prev, { ...item, quantity: 1 }];
+        const newItem = { 
+          ...item, 
+          quantity: 1,
+          // Calculate the total correctly
+          total: (item.price + item.tax)
+        };
+        return [...prev, newItem];
       }
     });
 

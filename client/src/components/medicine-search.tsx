@@ -70,10 +70,23 @@ export default function MedicineSearch({ onSearch }: MedicineSearchProps) {
     }
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = async (suggestion: string) => {
     setSearchTerm(suggestion);
     setShowSuggestions(false);
-    handleSearch();
+    
+    // Search for the specific medicine that was clicked
+    setIsLoading(true);
+    try {
+      // Filter results to only show the exact match for the selected suggestion
+      const results = await searchMedicines(suggestion);
+      const exactResults = results.filter(med => med.name === suggestion);
+      onSearch(exactResults.length > 0 ? exactResults : [results[0]]);
+      saveRecentSearch(suggestion);
+    } catch (error) {
+      console.error("Error searching for specific medicine:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlePopularSearchClick = (term: string) => {
