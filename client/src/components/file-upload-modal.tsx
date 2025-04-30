@@ -88,38 +88,92 @@ export function FileUploadModal({ isOpen, onClose }: FileUploadModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md card-gradient">
         <DialogHeader>
-          <DialogTitle>Upload Excel File</DialogTitle>
+          <DialogTitle className="flex items-center gap-2 text-primary">
+            <svg
+              className="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <path d="M12 18v-6"/>
+              <path d="m9 15 3 3 3-3"/>
+            </svg>
+            Upload Medicine Data
+          </DialogTitle>
           <DialogDescription>
-            Please upload your Excel file containing medicine information.
+            Upload your Excel file with medicine information to update the database.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="flex items-center gap-4">
             <label
               htmlFor="excel-file"
-              className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+              className="flex flex-col items-center justify-center w-full h-40 border-2 border-primary/20 border-dashed rounded-lg cursor-pointer bg-muted/30 hover:bg-primary/5 transition-colors duration-200"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg
-                  className="w-8 h-8 mb-3 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  ></path>
-                </svg>
-                <p className="mb-2 text-sm text-gray-500">
-                  <span className="font-semibold">Click to upload</span> or drag and drop
-                </p>
-                <p className="text-xs text-gray-500">Excel files only (.xlsx, .xls)</p>
+                {file ? (
+                  <>
+                    <div className="w-12 h-12 mb-3 flex items-center justify-center rounded-full bg-green-100">
+                      <svg
+                        className="w-6 h-6 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p className="mb-1 text-sm font-medium text-primary">
+                      File selected
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {file.name} ({Math.round(file.size / 1024)} KB)
+                    </p>
+                    <p className="mt-2 text-xs text-blue-600 underline">
+                      Click to change file
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-12 h-12 mb-3 flex items-center justify-center rounded-full bg-primary/10">
+                      <svg
+                        className="w-6 h-6 text-primary"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                        ></path>
+                      </svg>
+                    </div>
+                    <p className="mb-2 text-sm text-foreground">
+                      <span className="font-semibold">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="text-xs text-muted-foreground">Excel files only (.xlsx, .xls)</p>
+                    <p className="mt-2 text-xs text-muted-foreground">Maximum file size: 10MB</p>
+                  </>
+                )}
               </div>
               <Input
                 id="excel-file"
@@ -130,18 +184,43 @@ export function FileUploadModal({ isOpen, onClose }: FileUploadModalProps) {
               />
             </label>
           </div>
+          
           {file && (
-            <div className="text-sm text-gray-500">
-              Selected file: <span className="font-medium">{file.name}</span>
+            <div className="bg-primary/5 rounded-md px-4 py-3 border border-primary/20">
+              <h4 className="text-sm font-medium mb-1">File Information</h4>
+              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                <p>
+                  <span className="inline-block w-24 text-foreground/70">Name:</span> 
+                  <span className="font-medium text-foreground">{file.name}</span>
+                </p>
+                <p>
+                  <span className="inline-block w-24 text-foreground/70">Size:</span> 
+                  <span>{Math.round(file.size / 1024)} KB</span>
+                </p>
+                <p>
+                  <span className="inline-block w-24 text-foreground/70">Type:</span> 
+                  <span>{file.type || 'application/vnd.ms-excel'}</span>
+                </p>
+              </div>
             </div>
           )}
+          
+          <div className="text-xs text-muted-foreground mt-2">
+            <p className="flex items-center">
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Your Excel file should contain columns for Name, Packing, Price, Disc, and Tax.
+            </p>
+          </div>
         </div>
-        <DialogFooter className="sm:justify-end">
+        <DialogFooter className="sm:justify-end gap-2">
           <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             onClick={onClose}
             disabled={isUploading}
+            className="border-primary/20 hover:bg-primary/5"
           >
             Cancel
           </Button>
@@ -149,6 +228,7 @@ export function FileUploadModal({ isOpen, onClose }: FileUploadModalProps) {
             type="button"
             onClick={handleUpload}
             disabled={!file || isUploading}
+            className={file ? "btn-gradient" : "bg-muted text-muted-foreground"}
           >
             {isUploading ? (
               <>
@@ -159,7 +239,18 @@ export function FileUploadModal({ isOpen, onClose }: FileUploadModalProps) {
                 Uploading...
               </>
             ) : (
-              "Upload"
+              <>
+                <svg 
+                  className="w-4 h-4 mr-2" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                Upload File
+              </>
             )}
           </Button>
         </DialogFooter>
