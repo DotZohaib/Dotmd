@@ -34,30 +34,42 @@ export class MemStorage implements IStorage {
     // Add sample medicines for development
     const testMedicines: InsertMedicine[] = [
       {
-        name: "Paracetamol",
-        manufacturer: "ABC Pharma",
-        dosage: "500mg",
-        price: 5.50,
-        tax: 5,
-        availability: "In Stock"
+        name: "DICLORAN SR 100MG",
+        Packing: "30'S",
+        Rate: 552.50,
+        tax: 0.0,
+        Disc: 0.0
       },
       {
-        name: "Aspirin",
-        manufacturer: "XYZ Healthcare",
-        dosage: "100mg",
-        price: 3.75,
-        tax: 5,
-        availability: "In Stock"
+        name: "AMOXIL SYRUP (125MG)",
+        Packing: "90ML",
+        Rate: 107.32,
+        tax: 0.0,
+        Disc: 0.0
       },
       {
-        name: "Vitamin C",
-        manufacturer: "Health Supplements Inc.",
-        dosage: "1000mg",
-        price: 12.99,
-        tax: 12,
-        availability: "Low Stock"
+        name: "ASCARD PLUS 239.4",
+        Packing: "",        // No packing info provided
+        Rate: 217.73,
+        tax: 0.0,
+        Disc: 1.0
+      },
+      {
+        name: "ATCOMID 50",
+        Packing: "",        // No packing info provided
+        Rate: 408.00,
+        tax: 0.0,
+        Disc: 18.0
+      },
+      {
+        name: "ATCOMID 100",
+        Packing: "",        // No packing info provided
+        Rate: 595.00,
+        tax: 0.0,
+        Disc: 11.0
       }
     ];
+
     
     // Create sample medicines
     for (const medicine of testMedicines) {

@@ -78,18 +78,18 @@ export const medicineSearchSchema = z.object({
 
 export const uploadMedicinesSchema = z.array(
   z.object({
-    // Make all fields more flexible with transformers
-    name: z.union([z.string(), z.number()]).transform(val => String(val)),
-    manufacturer: z.union([z.string(), z.number()]).transform(val => String(val)),
-    dosage: z.union([z.string(), z.number()]).transform(val => String(val)),
-    // Handle price as string or number
-    price: z.union([z.string(), z.number()])
+    // Accept fields based on the user's Excel format
+    "Description of Goods": z.union([z.string(), z.number()]).transform(val => String(val)),
+    "Rate": z.union([z.string(), z.number()])
       .transform(val => typeof val === 'string' ? parseFloat(val) : val)
-      .refine(val => !isNaN(val) && val >= 0, "Price must be a positive number"),
-    // Handle tax as string or number
-    tax: z.union([z.string(), z.number()])
-      .transform(val => typeof val === 'string' ? parseFloat(val) : val)
-      .refine(val => !isNaN(val) && val >= 0, "Tax must be a non-negative number"),
-    availability: z.union([z.string(), z.number()]).transform(val => String(val)),
+      .refine(val => !isNaN(val) && val >= 0, "Rate must be a positive number"),
+    "Disc": z.union([z.string(), z.number(), z.undefined()]).optional()
+      .transform(val => val === undefined ? 0 : (typeof val === 'string' ? parseFloat(val) : val))
+      .refine(val => !isNaN(val as number), "Discount must be a number"),
+    "Tax": z.union([z.string(), z.number(), z.undefined()]).optional()
+      .transform(val => val === undefined ? 0 : (typeof val === 'string' ? parseFloat(val) : val))
+      .refine(val => !isNaN(val as number), "Tax must be a number"),
+    "Packing": z.union([z.string(), z.number(), z.undefined()]).optional()
+      .transform(val => val === undefined ? 'N/A' : String(val)),
   }).passthrough() // Allow extra fields in the Excel
 );

@@ -133,7 +133,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Clear existing medicines and add new ones
       await storage.clearMedicines();
-      for (const medicine of validatedData) {
+      
+      // Map the Excel format to our medicine model
+      for (const excelRow of validatedData) {
+        // Create a properly formatted medicine object
+        const medicine = {
+          name: excelRow["Description of Goods"],
+          manufacturer: excelRow["Packing"] || 'Not specified',
+          dosage: 'Not specified',
+          price: excelRow["Rate"],
+          tax: excelRow["Tax"] || 0,
+          availability: excelRow["Disc"] && excelRow["Disc"] > 0 ? 'Discount available' : 'Regular price'
+        };
+        
         await storage.createMedicine(medicine);
       }
       
