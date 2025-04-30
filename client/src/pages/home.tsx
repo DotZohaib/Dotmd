@@ -15,8 +15,14 @@ export default function Home() {
   const [selectedForPrint, setSelectedForPrint] = useState<boolean>(false);
 
   const handleSearch = (results: Medicine[]) => {
-    setSearchResults(results);
-    setShowResults(true);
+    // Only update search results and show them if we have results
+    if (results && results.length > 0) {
+      setSearchResults(results);
+      setShowResults(true);
+    } else {
+      // If no results, show a message or handle accordingly
+      setShowResults(false);
+    }
   };
 
   const handlePrintBill = () => {

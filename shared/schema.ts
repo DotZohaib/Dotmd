@@ -23,6 +23,9 @@ export const medicines = pgTable("medicines", {
   price: doublePrecision("price").notNull(),
   tax: doublePrecision("tax").notNull(),
   availability: text("availability").notNull(),
+  Packing: text("packing"),  // Added to match Excel uploads
+  Disc: doublePrecision("discount"),  // Added to match Excel uploads
+  Rate: doublePrecision("rate"),  // Added to match Excel uploads
 });
 
 export const insertMedicineSchema = createInsertSchema(medicines).omit({

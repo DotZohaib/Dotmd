@@ -7,6 +7,7 @@ export interface Medicine {
   price: number;
   tax: number;
   availability: string;
+  Packing?: string; // Added to match the Excel upload format
 }
 
 // Bill item type for frontend use

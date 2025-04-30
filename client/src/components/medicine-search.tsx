@@ -77,10 +77,23 @@ export default function MedicineSearch({ onSearch }: MedicineSearchProps) {
     // Search for the specific medicine that was clicked
     setIsLoading(true);
     try {
-      // Filter results to only show the exact match for the selected suggestion
+      // Get all medicines that match the search term
       const results = await searchMedicines(suggestion);
-      const exactResults = results.filter(med => med.name === suggestion);
-      onSearch(exactResults.length > 0 ? exactResults : [results[0]]);
+      
+      // Only show the exact medicine that was clicked (exact name match)
+      const exactMatch = results.find(med => med.name === suggestion);
+      
+      if (exactMatch) {
+        // If we found an exact match, only show that one
+        onSearch([exactMatch]);
+      } else if (results.length > 0) {
+        // If no exact match but we have results, just show the first one
+        onSearch([results[0]]);
+      } else {
+        // No results found
+        onSearch([]);
+      }
+      
       saveRecentSearch(suggestion);
     } catch (error) {
       console.error("Error searching for specific medicine:", error);

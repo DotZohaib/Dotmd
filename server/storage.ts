@@ -32,41 +32,83 @@ export class MemStorage implements IStorage {
 
   private initializeTestData() {
     // Add sample medicines for development
-    const testMedicines: InsertMedicine[] = [
+    const testMedicines = [
       {
         name: "DICLORAN SR 100MG",
+        manufacturer: "Abbott Labs",
+        dosage: "100mg",
+        price: 552.50,
+        tax: 0.0,
+        availability: "In Stock",
         Packing: "30'S",
         Rate: 552.50,
-        tax: 0.0,
         Disc: 0.0
       },
       {
         name: "AMOXIL SYRUP (125MG)",
+        manufacturer: "GlaxoSmithKline",
+        dosage: "125mg/5ml",
+        price: 107.32,
+        tax: 0.0,
+        availability: "In Stock",
         Packing: "90ML",
         Rate: 107.32,
-        tax: 0.0,
         Disc: 0.0
       },
       {
         name: "ASCARD PLUS 239.4",
-        Packing: "",        // No packing info provided
-        Rate: 217.73,
+        manufacturer: "Sami Pharmaceuticals",
+        dosage: "239.4mg",
+        price: 217.73,
         tax: 0.0,
+        availability: "Discount 1%",
+        Packing: "10's",
+        Rate: 217.73,
         Disc: 1.0
       },
       {
         name: "ATCOMID 50",
-        Packing: "",        // No packing info provided
-        Rate: 408.00,
+        manufacturer: "Atco Laboratories",
+        dosage: "50mg",
+        price: 408.00,
         tax: 0.0,
+        availability: "Discount 18%",
+        Packing: "20's",
+        Rate: 408.00,
         Disc: 18.0
       },
       {
         name: "ATCOMID 100",
-        Packing: "",        // No packing info provided
-        Rate: 595.00,
+        manufacturer: "Atco Laboratories",
+        dosage: "100mg",
+        price: 595.00,
         tax: 0.0,
+        availability: "Discount 11%",
+        Packing: "10's",
+        Rate: 595.00,
         Disc: 11.0
+      },
+      {
+        name: "AZOMAX 250MG CAP.",
+        manufacturer: "Pfizer Pakistan Ltd",
+        dosage: "250mg",
+        price: 980.00,
+        tax: 10.0,
+        availability: "In Stock",
+        Packing: "6's",
+        Rate: 980.00,
+        Disc: 0.0
+      },
+      {
+        name: "CEFSPAN 400 CAP.( BARRET )",
+        manufacturer: "Barrett Hodgson",
+        dosage: "400mg",
+        price: 790.00,
+        tax: 10.0,
+        availability: "In Stock",
+        Packing: "5's",
+        Rate: 790.00,
+        Disc: 0.0
       }
     ];
 
