@@ -94,12 +94,30 @@ export default function SearchResults({ results }: SearchResultsProps) {
   };
 
   return (
-    <Card className="bg-white shadow rounded-lg mb-8">
-      <CardHeader className="px-4 py-5 sm:px-6 flex flex-row justify-between items-center">
-        <CardTitle className="text-lg font-medium text-gray-900">Search Results</CardTitle>
-        <div className="flex space-x-2">
+    <Card className="card-gradient mb-8 overflow-hidden">
+      <CardHeader className="px-4 py-5 sm:px-6 flex flex-row justify-between items-center bg-muted/30 border-b">
+        <CardTitle className="text-lg sm:text-xl font-medium text-primary">
+          <span className="inline-flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Search Results
+          </span>
+        </CardTitle>
+        <div className="flex space-x-2 mobile-stack mobile-center">
           <Button 
-            variant="outline" 
+            className="btn-gradient"
             size="sm"
             onClick={handleDownloadExcel}
           >
@@ -113,7 +131,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-green-600 mr-2"
+              className="mr-2"
             >
               <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
               <polyline points="14 2 14 8 20 8" />
@@ -128,7 +146,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
             variant="outline" 
             size="sm"
             onClick={handlePrintResults}
-            className="print:hidden"
+            className="print:hidden hover:bg-secondary"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -150,45 +168,45 @@ export default function SearchResults({ results }: SearchResultsProps) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="px-4 py-0 sm:px-6">
+      <CardContent className="px-4 py-4 sm:px-6">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader>
+            <TableHeader className="bg-muted/20">
               <TableRow>
-                <TableHead>Medicine Name</TableHead>
-                <TableHead>Packing</TableHead>
-                <TableHead>Price (₹)</TableHead>
-                <TableHead>Disc (%)</TableHead>
-                <TableHead>Tax (%)</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Final Price (₹)</TableHead>
-                <TableHead className="print:hidden">Action</TableHead>
+                <TableHead className="font-semibold">Medicine Name</TableHead>
+                <TableHead className="font-semibold">Packing</TableHead>
+                <TableHead className="font-semibold">Price (₹)</TableHead>
+                <TableHead className="font-semibold">Disc (%)</TableHead>
+                <TableHead className="font-semibold">Tax (%)</TableHead>
+                <TableHead className="font-semibold">Quantity</TableHead>
+                <TableHead className="font-semibold">Final Price (₹)</TableHead>
+                <TableHead className="font-semibold print:hidden">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {results.length > 0 ? (
                 results.map((medicine, index) => (
-                  <TableRow key={index}>
+                  <TableRow key={index} className="table-row-hover">
                     <TableCell className="font-medium">{medicine.name}</TableCell>
                     <TableCell>{medicine.manufacturer}</TableCell>
                     <TableCell>{medicine.price.toFixed(2)}</TableCell>
                     <TableCell>
                       {medicine.availability.includes('Discount') ? 
-                        <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">
+                        <span className="pill pill-success badge-pulse">
                           {medicine.availability.replace('Discount ', '')}
-                        </Badge> : 
-                        <Badge variant="outline" className="bg-gray-100 text-gray-800 hover:bg-gray-100">
+                        </span> : 
+                        <span className="pill bg-gray-100 text-gray-800">
                           0%
-                        </Badge>
+                        </span>
                       }
                     </TableCell>
                     <TableCell>{medicine.tax}%</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
-                          className="h-7 w-7 p-0"
+                          className="h-7 w-7 p-0 rounded-full"
                           onClick={() => updateQuantity(medicine.name, (quantities[medicine.name] || 1) - 1)}
                         >
                           <svg
@@ -209,13 +227,13 @@ export default function SearchResults({ results }: SearchResultsProps) {
                           type="number" 
                           value={quantities[medicine.name] || 1} 
                           onChange={(e) => updateQuantity(medicine.name, parseInt(e.target.value) || 1)}
-                          className="w-12 h-8 text-center p-0"
+                          className="w-12 h-8 text-center p-0 border-primary/30 focus:border-primary"
                           min="1"
                         />
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
-                          className="h-7 w-7 p-0"
+                          className="h-7 w-7 p-0 rounded-full"
                           onClick={() => updateQuantity(medicine.name, (quantities[medicine.name] || 1) + 1)}
                         >
                           <svg
@@ -239,11 +257,27 @@ export default function SearchResults({ results }: SearchResultsProps) {
                     </TableCell>
                     <TableCell className="print:hidden">
                       <Button
-                        variant="link"
+                        variant="outline"
                         size="sm"
                         onClick={() => handleAddToBill(medicine)}
-                        className="text-primary hover:text-primary/90"
+                        className="bg-primary/10 hover:bg-primary/20 text-primary hover:text-primary border-primary/30"
                       >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="mr-1"
+                        >
+                          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                          <line x1="3" y1="6" x2="21" y2="6" />
+                          <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
                         Add to Bill
                       </Button>
                     </TableCell>
@@ -251,13 +285,39 @@ export default function SearchResults({ results }: SearchResultsProps) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-4">
-                    No medicines found. Try a different search term.
+                  <TableCell colSpan={8} className="text-center py-6">
+                    <div className="flex flex-col items-center justify-center text-muted-foreground">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="40"
+                        height="40"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="mb-3 text-muted-foreground/60"
+                      >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <line x1="8" y1="11" x2="14" y2="11"></line>
+                      </svg>
+                      <p className="mb-2 text-lg font-medium">No medicines found</p>
+                      <p className="text-sm">Try a different search term or upload a medicine database.</p>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
+          
+          {results.length >= 10 && (
+            <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/20 text-center">
+              <p className="text-sm font-medium text-primary mb-1">Bulk Order Detected</p>
+              <p className="text-xs text-muted-foreground">You have {results.length} items in your results. Special pricing may apply for bulk orders.</p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
