@@ -78,11 +78,18 @@ export const medicineSearchSchema = z.object({
 
 export const uploadMedicinesSchema = z.array(
   z.object({
-    name: z.string(),
-    manufacturer: z.string(),
-    dosage: z.string(),
-    price: z.number().positive(),
-    tax: z.number().min(0),
-    availability: z.string(),
-  })
+    // Make all fields more flexible with transformers
+    name: z.union([z.string(), z.number()]).transform(val => String(val)),
+    manufacturer: z.union([z.string(), z.number()]).transform(val => String(val)),
+    dosage: z.union([z.string(), z.number()]).transform(val => String(val)),
+    // Handle price as string or number
+    price: z.union([z.string(), z.number()])
+      .transform(val => typeof val === 'string' ? parseFloat(val) : val)
+      .refine(val => !isNaN(val) && val >= 0, "Price must be a positive number"),
+    // Handle tax as string or number
+    tax: z.union([z.string(), z.number()])
+      .transform(val => typeof val === 'string' ? parseFloat(val) : val)
+      .refine(val => !isNaN(val) && val >= 0, "Tax must be a non-negative number"),
+    availability: z.union([z.string(), z.number()]).transform(val => String(val)),
+  }).passthrough() // Allow extra fields in the Excel
 );

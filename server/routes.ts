@@ -1,10 +1,29 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import multer from 'multer';
 import xlsx from 'xlsx';
 import { medicineSearchSchema, uploadMedicinesSchema } from "@shared/schema";
 import { z } from "zod";
+
+// Define types for multer
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
+}
+
+// Extend Express Request type
+declare global {
+  namespace Express {
+    interface Request {
+      file?: MulterFile;
+    }
+  }
+}
 
 // Set up multer for file uploads
 const upload = multer({
@@ -92,6 +111,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Endpoint to upload medicine data from Excel
   app.post('/api/medicines/upload', upload.single('file'), async (req, res) => {
+    // Define this outside try block to make it accessible in catch block
+    let excelData: any[] = [];
+    
     try {
       if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
@@ -103,10 +125,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const worksheet = workbook.Sheets[sheetName];
       
       // Convert to JSON
-      const data = xlsx.utils.sheet_to_json(worksheet);
+      excelData = xlsx.utils.sheet_to_json(worksheet);
+      console.log('Excel data parsed:', JSON.stringify(excelData.slice(0, 2), null, 2)); // Log first two rows
       
       // Validate data format
-      const validatedData = uploadMedicinesSchema.parse(data);
+      const validatedData = uploadMedicinesSchema.parse(excelData);
       
       // Clear existing medicines and add new ones
       await storage.clearMedicines();
@@ -120,6 +143,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error('Excel validation error:', JSON.stringify(error.format(), null, 2));
+        console.error('Data being validated:', JSON.stringify(excelData, null, 2));
         return res.status(400).json({ 
           message: 'Invalid data format in Excel file',
           error: error.errors
