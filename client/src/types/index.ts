@@ -8,6 +8,8 @@ export interface Medicine {
   tax: number;
   availability: string;
   Packing?: string; // Added to match the Excel upload format
+  Disc?: number;    // Discount percentage
+  Rate?: number;    // Original rate/price
 }
 
 // Bill item type for frontend use

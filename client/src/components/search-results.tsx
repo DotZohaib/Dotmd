@@ -49,8 +49,8 @@ export default function SearchResults({ results }: SearchResultsProps) {
   };
   
   const getDiscountPercent = (medicine: Medicine) => {
-    if (medicine.availability.includes('Discount')) {
-      return parseFloat(medicine.availability.replace('Discount ', ''));
+    if (medicine.Disc && medicine.Disc > 0) {
+      return medicine.Disc;
     }
     return 0;
   };
@@ -188,12 +188,12 @@ export default function SearchResults({ results }: SearchResultsProps) {
                 results.map((medicine, index) => (
                   <TableRow key={index} className="table-row-hover">
                     <TableCell className="font-medium">{medicine.name}</TableCell>
-                    <TableCell>{medicine.manufacturer}</TableCell>
+                    <TableCell>{medicine.Packing || 'N/A'}</TableCell>
                     <TableCell>{medicine.price.toFixed(2)}</TableCell>
                     <TableCell>
-                      {medicine.availability.includes('Discount') ? 
+                      {medicine.Disc && medicine.Disc > 0 ? 
                         <span className="pill pill-success badge-pulse">
-                          {medicine.availability.replace('Discount ', '')}
+                          {medicine.Disc}%
                         </span> : 
                         <span className="pill bg-gray-100 text-gray-800">
                           0%
