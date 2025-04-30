@@ -143,7 +143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           dosage: 'Not specified',
           price: excelRow["Rate"],
           tax: excelRow["Tax"] || 0,
-          availability: excelRow["Disc"] && excelRow["Disc"] > 0 ? 'Discount available' : 'Regular price'
+          availability: excelRow["Disc"] ? `Discount ${excelRow["Disc"]}%` : 'Regular price'
         };
         
         await storage.createMedicine(medicine);

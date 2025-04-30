@@ -130,7 +130,7 @@ export default function SearchResults({ results }: SearchResultsProps) {
                     <TableCell>
                       {medicine.availability.includes('Discount') ? 
                         <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">
-                          Yes
+                          {medicine.availability.replace('Discount ', '')}
                         </Badge> : 
                         <Badge variant="outline" className="bg-gray-100 text-gray-800 hover:bg-gray-100">
                           0%
