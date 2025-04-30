@@ -113,11 +113,10 @@ export default function SearchResults({ results }: SearchResultsProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Medicine Name</TableHead>
-                <TableHead>Manufacturer</TableHead>
-                <TableHead>Dosage</TableHead>
+                <TableHead>Packing</TableHead>
                 <TableHead>Price (₹)</TableHead>
+                <TableHead>Disc (%)</TableHead>
                 <TableHead>Tax (%)</TableHead>
-                <TableHead>Availability</TableHead>
                 <TableHead className="print:hidden">Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -127,23 +126,18 @@ export default function SearchResults({ results }: SearchResultsProps) {
                   <TableRow key={index}>
                     <TableCell className="font-medium">{medicine.name}</TableCell>
                     <TableCell>{medicine.manufacturer}</TableCell>
-                    <TableCell>{medicine.dosage}</TableCell>
                     <TableCell>{medicine.price.toFixed(2)}</TableCell>
-                    <TableCell>{medicine.tax}%</TableCell>
                     <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={`${
-                          medicine.availability.toLowerCase() === "in stock"
-                            ? "bg-green-100 text-green-800 hover:bg-green-100"
-                            : medicine.availability.toLowerCase() === "low stock"
-                            ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-                            : "bg-red-100 text-red-800 hover:bg-red-100"
-                        }`}
-                      >
-                        {medicine.availability}
-                      </Badge>
+                      {medicine.availability.includes('Discount') ? 
+                        <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">
+                          Yes
+                        </Badge> : 
+                        <Badge variant="outline" className="bg-gray-100 text-gray-800 hover:bg-gray-100">
+                          0%
+                        </Badge>
+                      }
                     </TableCell>
+                    <TableCell>{medicine.tax}%</TableCell>
                     <TableCell className="print:hidden">
                       <Button
                         variant="link"

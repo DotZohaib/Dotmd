@@ -142,8 +142,10 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Medicine</TableHead>
+                <TableHead>Packing</TableHead>
                 <TableHead>Quantity</TableHead>
                 <TableHead>Price (₹)</TableHead>
+                <TableHead>Disc (%)</TableHead>
                 <TableHead>Tax (₹)</TableHead>
                 <TableHead>Total (₹)</TableHead>
                 <TableHead className="print:hidden">Action</TableHead>
@@ -154,6 +156,7 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
                 billItems.map((item, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{item.medicineName}</TableCell>
+                    <TableCell>{'N/A'}</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         <Button
@@ -200,6 +203,7 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
                       </div>
                     </TableCell>
                     <TableCell>{(item.price * item.quantity).toFixed(2)}</TableCell>
+                    <TableCell>0%</TableCell>
                     <TableCell>{(item.tax * item.quantity).toFixed(2)}</TableCell>
                     <TableCell>{((item.price + item.tax) * item.quantity).toFixed(2)}</TableCell>
                     <TableCell className="print:hidden">
@@ -228,7 +232,7 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-4">
+                  <TableCell colSpan={8} className="text-center py-4">
                     No items in the bill. Add items from search results.
                   </TableCell>
                 </TableRow>
@@ -237,7 +241,7 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
             {billItems.length > 0 && (
               <TableFooter>
                 <TableRow>
-                  <TableCell colSpan={4} className="text-right font-medium">
+                  <TableCell colSpan={6} className="text-right font-medium">
                     Subtotal:
                   </TableCell>
                   <TableCell className="font-medium">
@@ -246,7 +250,7 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
                   <TableCell></TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell colSpan={4} className="text-right font-medium">
+                  <TableCell colSpan={6} className="text-right font-medium">
                     Tax:
                   </TableCell>
                   <TableCell className="font-medium">
@@ -255,7 +259,7 @@ export default function BillSection({ onPrintBill }: BillSectionProps) {
                   <TableCell></TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell colSpan={4} className="text-right font-medium">
+                  <TableCell colSpan={6} className="text-right font-medium">
                     Grand Total:
                   </TableCell>
                   <TableCell className="font-bold text-primary">
